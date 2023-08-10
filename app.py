@@ -51,6 +51,7 @@ def create_table():
         cursor.close()
         connection.close()
         print("Table created successfully.")
+
     except Exception as e:
         print("Error: Unable to create the table.")
         print(e)
@@ -82,9 +83,12 @@ def index():
                 print("login success")
                 session['user'] = email
                 print("working login")
+                cursor.close()
+                connection.close()
                 return render_template("course.html",user=email)
             else:
                 print("access denied")
+            
     return render_template('index.html')
 
 
@@ -109,7 +113,8 @@ def signup():
             insert_query = "INSERT INTO users VALUES (%s, %s, %s, %s, %s);"
             cursor.execute(insert_query, (fname, lname, phn, email, pas))
             connection.commit()
-
+            cursor.close()
+            connection.close()
             return render_template("index.html")
         except Exception as e:
             print("Error:", e)  # Print the error message
@@ -179,6 +184,8 @@ def login():
             print("login success")
             cursor.execute("SELECT * FROM users;")
             data = cursor.fetchall()
+            cursor.close()
+            connection.close()
             return render_template('admin.html', data=data)
         else:
             print("access denied")
