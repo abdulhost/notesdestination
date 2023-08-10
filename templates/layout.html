@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Note Destination Courses</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-image: url("{{ url_for('static', filename='lib.jpg') }}");
+      background-size: cover;
+      background-position: center;
+
+      /* background-repeat: no-repeat; */
+      /* min-height: 100vh; */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      /* Add this */
+    }
+
+
+
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      background-color: #333;
+      padding: 10px;
+      color: white;
+      font-family: Arial, sans-serif;
+      width: 90%;
+    }
+
+    #title {
+      flex-grow: 1;
+      font-weight: bold;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+
+
+    .navbar a {
+      text-decoration: none;
+      color: white;
+      margin-right: 15px;
+    }
+
+
+    .navbar a.user {
+      margin-right: 10px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+
+    .navbar a.logout {
+      font-weight: normal;
+      font-size: 14px;
+    }
+    .sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+    .logo img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+    }
+
+    .contact-dropdown {
+      position: relative;
+    }
+
+    .contact-button {
+      background-color: transparent;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .contact-content {
+      border-radius: 10px;
+      display: none;
+      position: absolute;
+      background-color: #eeabab;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      padding: 8px;
+      z-index: 1;
+    }
+
+    .contact-dropdown:hover .contact-content,
+    .contact-dropdown:focus-within .contact-content {
+      display: block;
+    }
+
+
+    .courses {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      color: blueviolet;
+    }
+
+
+    .semester {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 10px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      color: blueviolet;
+    }
+
+    .courses a {
+      text-decoration: none;
+      color: blueviolet;
+      /* color: aqua; */
+    }
+
+    h1 {
+      color: white;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .contact-dropdown {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+
+
+    .contact-content {
+      border-radius: 10px;
+      /* border: 2px solid; */
+      display: none;
+      position: absolute;
+      background-color: #eeabab;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      padding: 8px;
+      z-index: 1;
+    }
+
+    .contact-dropdown:hover .contact-content,
+    .contact-dropdown:focus-within .contact-content {
+      display: block;
+    }
+
+    .courses {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 43vh;
+    }
+
+    .course-card {
+      background-color: #f0f0f0;
+
+      border-radius: 32px;
+      box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+      margin: 10px;
+      padding: 20px;
+      text-align: center;
+      width: 200px;
+    }
+
+    .course-link {
+      text-decoration: none;
+      color: #333;
+    }
+
+    .contact-button {
+      background-color: transparent;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .contact-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      z-index: 1;
+      color: black;
+    }
+
+    .contact-dropdown:hover .contact-content,
+    .contact-dropdown:focus-within .contact-content {
+      display: block;
+    }
+
+    .subjects {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: -12px;
+    }
+
+    .subject {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 10px;
+      text-align: center;
+      width: inherit;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+    }
+
+    .subject a {
+      color: blueviolet;
+    }
+
+    h1 {
+      color: white;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    #head {
+      font-size: 48px;
+      color: #333;
+      text-align: center;
+      margin: 50px 0;
+      text-shadow: 2px 2px 4px rgb(255, 255, 255);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+    #semh{
+      font-size: 30px; 
+  font-family: 'Arial', sans-serif;
+  color: white; 
+  text-shadow: 2px 2px 4px rgba(163, 85, 85, 0.911);
+  align-items: center;
+  justify-content: center;
+margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    window.onscroll = function() { myFunction() };
+
+var navbar = document.querySelector(".navbar");
+var sticky = navbar.offsetTop;
+
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky");
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
+
+  </script>
+  <div class="navbar">
+    <div class="logo">
+      <a href="/home"><img src="{{ url_for('static', filename='logo.jpg') }}" alt="error loading">
+
+      </a>
+    </div>
+    <div id="title">
+      <a class="home" href="/home" title="Notes Destination">Notes Destination</a>
+    </div>
+    <a class="home" href="/home" title="Home">Home</a>
+
+    <div class="contact-dropdown">
+      <a class="contact-button">Contact Us</a>
+      <div class="contact-content">
+        <p>Email: help@gmail.com</p>
+        <p>Phone: 9895647856</p>
+      </div>
+    </div>
+
+    <a href="#" title="Your Username">{{user}}</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+
+  {% block header %}
+
+  {% endblock %}
