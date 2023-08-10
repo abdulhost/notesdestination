@@ -1,90 +1,74 @@
-from flask import Flask, render_template,request,session,redirect,url_for
-app = Flask(__name__)
+from flask import Flask, render_template, request, session, redirect, url_for
 import psycopg2
-# postgres://users_gdkk_user:Lm0V7V21AHZidCATavJzCObzCwPVzIEe@dpg-cj99k49duelc7388nq2g-a.oregon-postgres.render.com/users_gdkk
-# Connect to the database
-app.secret_key="hello"
-connection = psycopg2.connect(
-    host='dpg-cj99k49duelc7388nq2g-a.oregon-postgres.render.com',
-    port='5432',
-    database='users_gdkk',
-    user='users_gdkk_user',
-    password='Lm0V7V21AHZidCATavJzCObzCwPVzIEe'
-)
 
-
-cursor = connection.cursor()
-print("connecting")
+app = Flask(__name__)
+app.secret_key = "hello"
 
 def connect_to_database():
     try:
         connection = psycopg2.connect(
-    host='dpg-cj99k49duelc7388nq2g-a.oregon-postgres.render.com',
-    port='5432',
-    database='users_gdkk',
-    user='users_gdkk_user',
-    password='Lm0V7V21AHZidCATavJzCObzCwPVzIEe'
-)
+            host='dpg-cj99k49duelc7388nq2g-a.oregon-postgres.render.com',
+            port='5432',
+            database='users_gdkk',
+            user='users_gdkk_user',
+            password='Lm0V7V21AHZidCATavJzCObzCwPVzIEe'
+        )
         return connection
-        
+    except Exception as e:
+        print("Error: Unable to connect to the database")
+        print(e)
+        return None
 
-    except Exception as e:
-        print("Error: Unable to connect")
-        print(e)
-        return "Error: Unable to connect"
 def create_table():
-    try:
-        print("Table Working")
-        connection = psycopg2.connect(
-    host='dpg-cj99k49duelc7388nq2g-a.oregon-postgres.render.com',
-    port='5432',
-    database='users_gdkk',
-    user='users_gdkk_user',
-    password='Lm0V7V21AHZidCATavJzCObzCwPVzIEe'
-)
-        cursor = connection.cursor()
-        create_table_query = """
-            CREATE TABLE IF NOT EXISTS users (firstname VARCHAR(50),lastname VARCHAR(50),phonenum int,email VARCHAR(50),password int);
-        """
-        cursor.execute(create_table_query)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print("Table created successfully.")
-    except Exception as e:
-        print("Error: Unable to create the table.")
-        print(e)
+    connection = connect_to_database()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            create_table_query = """
+                CREATE TABLE IF NOT EXISTS users (
+                    firstname VARCHAR(50),
+                    lastname VARCHAR(50),
+                    phonenum int,
+                    email VARCHAR(50) PRIMARY KEY,
+                    password VARCHAR(100)
+                );
+            """
+            cursor.execute(create_table_query)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            print("Table created successfully.")
+        except Exception as e:
+            print("Error: Unable to create the table.")
+            print(e)
 
 create_table()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    print("working login")
     if request.method == 'POST':
-        print("working")
         email = request.form.get('email')
-        password = int(request.form.get('pass'))
-        connection = psycopg2.connect(
-    host='dpg-cj99k49duelc7388nq2g-a.oregon-postgres.render.com',
-    port='5432',
-    database='users_gdkk',
-    user='users_gdkk_user',
-    password='Lm0V7V21AHZidCATavJzCObzCwPVzIEe'
-)
-        cursor = connection.cursor()
-        cursor.execute("SELECT email,password FROM users;")
-        data = cursor.fetchall()
-        i=0
-        for data in data:
-            print(data[i],data[i+1])
-            if email == data[i] and password == data[i+1]:
-                print("login success")
-                session['user'] = email
-                return render_template("course.html",user=email)
-            else:
-                print("access denied")
-    return render_template('index.html')
+        password = request.form.get('pass')
+        
+        connection = connect_to_database()
+        if connection:
+            try:
+                cursor = connection.cursor()
+                cursor.execute("SELECT email,password FROM users WHERE email = %s;", (email,))
+                user_data = cursor.fetchone()
+                if user_data and user_data[1] == password:
+                    session['user'] = email
+                    return render_template("course.html", user=email)
+                else:
+                    print("Access denied")
+            except Exception as e:
+                print("Error:", e)
+                print("Access denied")
+            finally:
+                cursor.close()
+                connection.close()
 
+    return render_template('index.html')
 
 @app.route('/sign_up', methods=['GET', 'POST'])
 def signup():
@@ -96,24 +80,30 @@ def signup():
             email = request.form['email']
             pas = request.form['pas']
 
-            
-            connection = psycopg2.connect(
-    host='dpg-cj99k49duelc7388nq2g-a.oregon-postgres.render.com',
-    port='5432',
-    database='users_gdkk',
-    user='users_gdkk_user',
-    password='Lm0V7V21AHZidCATavJzCObzCwPVzIEe')
-            cursor = connection.cursor()
-            insert_query = "INSERT INTO users VALUES (%s, %s, %s, %s, %s);"
-            cursor.execute(insert_query, (fname, lname, phn, email, pas))
-            connection.commit()
+            connection = connect_to_database()
+            if connection:
+                try:
+                    cursor = connection.cursor()
+                    insert_query = "INSERT INTO users VALUES (%s, %s, %s, %s, %s);"
+                    cursor.execute(insert_query, (fname, lname, phn, email, pas))
+                    connection.commit()
+                    return render_template("index.html")
+                except Exception as e:
+                    print("Error:", e)
+                    connection.rollback()
+                finally:
+                    cursor.close()
+                    connection.close()
 
-            return render_template("index.html")
         except Exception as e:
-            print("Error:", e)  # Print the error message
-    
+            print("Error:", e)
 
     return render_template('sign_up.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
 # @app.route("/course")
 # def course():
