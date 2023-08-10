@@ -108,10 +108,10 @@ def logout():
 # @app.route("/course")
 # def course():
 #     return "course working"
-@app.route('/logout')
-def logout():
-    session.clear()  # Clear the session
-    return redirect(url_for('index'))
+# @app.route('/logout')
+# def logout():
+#     session.clear()  # Clear the session
+#     return redirect(url_for('index'))
 
 @app.route('/home')
 def homepage():
