@@ -44,7 +44,7 @@ def create_table():
 )
         cursor = connection.cursor()
         create_table_query = """
-            CREATE TABLE IF NOT EXISTS users (firstname VARCHAR(50),lastname VARCHAR(50),phonenum int,email VARCHAR(50),password int);
+            CREATE TABLE IF NOT EXISTS users (firstname VARCHAR(50),lastname VARCHAR(50),phonenum int(15),email VARCHAR(50),password int(15));
         """
         cursor.execute(create_table_query)
         connection.commit()
@@ -104,17 +104,18 @@ def signup():
 
             print("working signup")
             connection = psycopg2.connect(
-    host='dpg-cj99k49duelc7388nq2g-a.oregon-postgres.render.com',
-    port='5432',
-    database='users_gdkk',
-    user='users_gdkk_user',
-    password='Lm0V7V21AHZidCATavJzCObzCwPVzIEe')
+                host='dpg-cj99k49duelc7388nq2g-a.oregon-postgres.render.com',
+                port='5432',
+                database='users_gdkk',
+                user='users_gdkk_user',
+                password='Lm0V7V21AHZidCATavJzCObzCwPVzIEe')
             cursor = connection.cursor()
             insert_query = "INSERT INTO users VALUES (%s, %s, %s, %s, %s);"
             cursor.execute(insert_query, (fname, lname, phn, email, pas))
             connection.commit()
             cursor.close()
             connection.close()
+            print("working signup end")
             return render_template("index.html")
         except Exception as e:
             print("Error:", e)  # Print the error message
