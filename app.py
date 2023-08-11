@@ -31,30 +31,44 @@ def connect_to_database():
         print("Error: Unable to connect")
         print(e)
         return "Error: Unable to connect"
-def create_table():
+
+def reset_table():
     try:
-        print("Table Working")
-        connection = psycopg2.connect(
-    host='dpg-cjamg5hitvpc73avef30-a.oregon-postgres.render.com',
-    port='5432',
-    database='users_92zn',
-    user='users_92zn_user',
-    password='nRA1p1uxNRoZc57u6GmvxcbkEFlAc84J'
-)
-        cursor = connection.cursor()
+        # connection = psycopg2.connect(
+        #     host='dpg-cjamg5hitvpc73avef30-a.oregon-postgres.render.com',
+        #     port='5432',
+        #     database='users_92zn',
+        #     user='users_92zn_user',
+        #     password='nRA1p1uxNRoZc57u6GmvxcbkEFlAc84J'
+        # )
+        # cursor = connection.cursor()
+
+        # # Drop the existing table
+        # drop_table_query = """
+        #     DROP TABLE IF EXISTS users;
+        # """
+        # cursor.execute(drop_table_query)
+        # connection.commit()
+
+        # Create the new table with the updated schema
         create_table_query = """
-            CREATE TABLE IF NOT EXISTS users (firstname VARCHAR(50),lastname VARCHAR(50),phonenum int,email VARCHAR(50),password int);
+            CREATE TABLE IF NOT EXISTS users (
+                firstname VARCHAR(50),
+                lastname VARCHAR(50),
+                phonenum BIGINT,
+                email VARCHAR(50),
+                password BIGINT
+            );
         """
         cursor.execute(create_table_query)
         connection.commit()
+
         cursor.close()
         connection.close()
-        print("Table created successfully.")
+        print("Table reset and created successfully.")
     except Exception as e:
-        print("Error: Unable to create the table.")
-        print(e)
-
-create_table()
+        return f"Error: {e}"
+reset_table()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
