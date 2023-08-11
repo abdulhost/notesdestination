@@ -1,14 +1,14 @@
 from flask import Flask, render_template,request,session,redirect,url_for
 app = Flask(__name__)
 import psycopg2
-# postgres://user_wott_user:mOqGGtYDJzu2wckVedhH8f8kwMe3aAiH@dpg-cjasrmhitvpc73btfkrg-a.oregon-postgres.render.com/user_wott
+# postgres://users_92zn_user:nRA1p1uxNRoZc57u6GmvxcbkEFlAc84J@dpg-cjamg5hitvpc73avef30-a.oregon-postgres.render.com/users_92zn
 app.secret_key="hello"
 connection = psycopg2.connect(
-    host='dpg-cjasrmhitvpc73btfkrg-a.oregon-postgres.render.com',
+    host='dpg-cjamg5hitvpc73avef30-a.oregon-postgres.render.com',
     port='5432',
-    database='user_wott',
-    user='user_wott_user',
-    password='mOqGGtYDJzu2wckVedhH8f8kwMe3aAiH'
+    database='users_92zn',
+    user='users_92zn_user',
+    password='nRA1p1uxNRoZc57u6GmvxcbkEFlAc84J'
 )
 
 
@@ -18,11 +18,11 @@ print("connecting")
 def connect_to_database():
     try:
         connection = psycopg2.connect(
-    host='dpg-cjasrmhitvpc73btfkrg-a.oregon-postgres.render.com',
+    host='dpg-cjamg5hitvpc73avef30-a.oregon-postgres.render.com',
     port='5432',
-    database='user_wott',
-    user='user_wott_user',
-    password='mOqGGtYDJzu2wckVedhH8f8kwMe3aAiH'
+    database='users_92zn',
+    user='users_92zn_user',
+    password='nRA1p1uxNRoZc57u6GmvxcbkEFlAc84J'
 )
         return connection
         
@@ -35,11 +35,11 @@ def create_table():
     try:
         print("Table Working")
         connection = psycopg2.connect(
-    host='dpg-cjasrmhitvpc73btfkrg-a.oregon-postgres.render.com',
+    host='dpg-cjamg5hitvpc73avef30-a.oregon-postgres.render.com',
     port='5432',
-    database='user_wott',
-    user='user_wott_user',
-    password='mOqGGtYDJzu2wckVedhH8f8kwMe3aAiH'
+    database='users_92zn',
+    user='users_92zn_user',
+    password='nRA1p1uxNRoZc57u6GmvxcbkEFlAc84J'
 )
         cursor = connection.cursor()
         create_table_query = """
@@ -64,11 +64,11 @@ def index():
         email = request.form.get('email')
         password = int(request.form.get('pass'))
         connection = psycopg2.connect(
-    host='dpg-cjasrmhitvpc73btfkrg-a.oregon-postgres.render.com',
+    host='dpg-cjamg5hitvpc73avef30-a.oregon-postgres.render.com',
     port='5432',
-    database='user_wott',
-    user='user_wott_user',
-    password='mOqGGtYDJzu2wckVedhH8f8kwMe3aAiH'
+    database='users_92zn',
+    user='users_92zn_user',
+    password='nRA1p1uxNRoZc57u6GmvxcbkEFlAc84J'
 )
         cursor = connection.cursor()
         cursor.execute("SELECT email,password FROM users;")
@@ -97,23 +97,37 @@ def signup():
 
             
             connection = psycopg2.connect(
-    host='dpg-cjasrmhitvpc73btfkrg-a.oregon-postgres.render.com',
+    host='dpg-cjamg5hitvpc73avef30-a.oregon-postgres.render.com',
     port='5432',
-    database='user_wott',
-    user='user_wott_user',
-    password='mOqGGtYDJzu2wckVedhH8f8kwMe3aAiH'
+    database='users_92zn',
+    user='users_92zn_user',
+    password='nRA1p1uxNRoZc57u6GmvxcbkEFlAc84J'
 )
             cursor = connection.cursor()
             insert_query = "INSERT INTO users VALUES (%s, %s, %s, %s, %s);"
             cursor.execute(insert_query, (fname, lname, phn, email, pas))
             connection.commit()
-
-            return render_template("index.html")
+            print("working signup")
+            # return redirect(url_for('index'))
+            session['signed_up'] = True
+            session['user'] = email
+            return redirect(url_for('homepage'))
         except Exception as e:
             print("Error:", e)  # Print the error message
-    
-
     return render_template('sign_up.html')
+@app.route('/confirm_submission', methods=['POST'])
+def confirm_submission():
+    if 'user' in session:
+        # Perform the necessary actions for confirming the submission
+        # For example, add the user to the course database
+        # ...
+        # Clear the user session to prevent further submissions
+        session.pop('user', None)
+        return redirect(url_for('index'))
+    else:
+        return "Please sign up before confirming submission."
+
+    
 
 # @app.route("/course")
 # def course():
@@ -165,11 +179,11 @@ def login():
         email = request.form.get('email')
         password = int(request.form.get('pass'))
         connection = psycopg2.connect(
-    host='dpg-cjasrmhitvpc73btfkrg-a.oregon-postgres.render.com',
+    host='dpg-cjamg5hitvpc73avef30-a.oregon-postgres.render.com',
     port='5432',
-    database='user_wott',
-    user='user_wott_user',
-    password='mOqGGtYDJzu2wckVedhH8f8kwMe3aAiH'
+    database='users_92zn',
+    user='users_92zn_user',
+    password='nRA1p1uxNRoZc57u6GmvxcbkEFlAc84J'
 )
         cursor = connection.cursor()
 

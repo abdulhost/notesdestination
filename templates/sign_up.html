@@ -96,10 +96,20 @@
         
         <div>
             <input id="b" type="reset" value="Clear">
-            <input id="b" type="submit" value="Sign Up">
+             <input id="b" type="submit" value="Sign up">
         </div>
         <a href="/admin" target="_blank">Admin Login</a>
     </form>
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("fname").value = "";
+            document.getElementById("lname").value = "";
+            document.getElementById("phn").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("pas").value = "";
+        });
+    </script>
 </body>
 
 </html>

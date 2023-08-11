@@ -307,6 +307,14 @@ function myFunction() {
   <div class="course-card"><h2>BBA</h2>
     <a class="course-link" href="#">Coming Soon </a></div>
 </div>
+{% if 'user' in session %}
+    
+{% else %}
+    <form action="{{ url_for('confirm_submission') }}" method="post">
+        
+        <input type="submit" value="Confirm Submission">
+    </form>
+{% endif %}
 
 </body>
 </html>
