@@ -82,7 +82,17 @@
             text-decoration: none;
             font-size: 14px;
         }
+        #togglePassword {
+  background: transparent;
+  border: none;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  font-size: 15px;
+  margin-top: 5px; /* Adjust this value as needed */
+}
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 </head>
 
 <body>
@@ -92,7 +102,12 @@
         <input type="text" name="lname" placeholder="Last Name">
         <input type="text" name="phn" placeholder="Phone Number">
         <input type="email" name="email" placeholder="Email">
-        <input type="password" name="pas" placeholder="Password (Only Integer Values)">
+        <input type="password" id="pas" name="pas" placeholder="Password (Only Integer Values)" required>
+        <button type="button" id="togglePassword">
+            <i class="fas fa-eye"></i>
+            Show Password
+          </button>
+
         
         <div>
             <input id="b" type="reset" value="Clear">
@@ -109,6 +124,21 @@
             document.getElementById("email").value = "";
             document.getElementById("pas").value = "";
         });
+        
+        const passwordInput = document.getElementById("pas");
+  const togglePasswordButton = document.getElementById("togglePassword");
+
+  togglePasswordButton.addEventListener("click", function () {
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      togglePasswordButton.textContent = "Hide Password";
+    } else {
+      passwordInput.type = "password";
+      togglePasswordButton.textContent = "Show Password";
+    }
+  });
+
+
     </script>
 </body>
 
