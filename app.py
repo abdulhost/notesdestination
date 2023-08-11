@@ -169,7 +169,7 @@ def subsem5():
 @app.route('/subjectsem6')
 def subsem6():
     user_email = session.get('user')  
-    return render_template('subsem5.html',user=user_email)
+    return render_template('subsem6.html',user=user_email)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def login():
